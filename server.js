@@ -16,7 +16,8 @@ app.get('/bianatTask/allPosts',catchAsync((req,res)=>{
             message:'page not found'
         })
     }
-    const posts = allPosts.slice(skipped,skipped + limit)
+    const sortedPosts = allPosts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const posts = sortedPosts.slice(skipped,skipped + limit)
     res.status(200).json({
         status:'success',
         length:ensureInteger(posts.length),
@@ -34,11 +35,11 @@ app.get('/bianatTask/activeUsers',catchAsync(async (req,res)=>{
 }))
 //------------------------------------------------------- 3 - get inactive users
 app.get('/bianatTask/inactiveUsers',catchAsync(async (req,res)=>{
-    const activeUsers = await allPosts.filter(post => post.user.active === false)
+    const inactiveUsers = await allPosts.filter(post => post.user.active === false)
     res.status(200).json({
         status:'success',
         length:ensureInteger(activeUsers.length),
-        activeUsers
+        inactiveUsers
     })
 }))
 //------------------------------------------------------- 4 - get post likes
