@@ -26,7 +26,10 @@ app.get('/bianatTask/allPosts',catchAsync((req,res)=>{
 }))
 //------------------------------------------------------- 2 - get active users
 app.get('/bianatTask/activeUsers',catchAsync(async (req,res)=>{
-    const activeUsers = await allPosts.filter(post => post.user.active === true)
+    const postsWithActiveUsers = await allPosts.filter(post => post.user.active === true)
+    const activeUsers = postsWithActiveUsers.map(post => {
+        return post.user
+    });
     res.status(200).json({
         status:'success',
         length:ensureInteger(activeUsers.length),
@@ -35,10 +38,13 @@ app.get('/bianatTask/activeUsers',catchAsync(async (req,res)=>{
 }))
 //------------------------------------------------------- 3 - get inactive users
 app.get('/bianatTask/inactiveUsers',catchAsync(async (req,res)=>{
-    const inactiveUsers = await allPosts.filter(post => post.user.active === false)
+    const postsWithInactiveUsers = await allPosts.filter(post => post.user.active === false)
+    const inactiveUsers = postsWithInactiveUsers.map(post => {
+        return post.user
+    });
     res.status(200).json({
         status:'success',
-        length:ensureInteger(activeUsers.length),
+        length:ensureInteger(inactiveUsers.length),
         inactiveUsers
     })
 }))
